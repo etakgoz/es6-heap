@@ -1,0 +1,14 @@
+{
+  "name": "heap",
+  "version": "1.0.0",
+  "description": "Heap Implementation",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Tolga Akgöz <tolga.akgoz@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}
