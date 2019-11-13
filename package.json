@@ -1,7 +1,7 @@
 {
   "name": "heap",
   "version": "1.0.0",
-  "description": "Heap Implementation",
+  "description": "ES6 Heap Implementation",
   "main": "main.js",
   "scripts": {
     "test": "jest"
