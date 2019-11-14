@@ -41,7 +41,19 @@ class Heap {
     constructor (arr = [], comparator = MIN_COMPARATOR, keyValidator = DEFAULT_KEY_VALIDATOR) {
         this.comparator = comparator;
         this.keyValidator = keyValidator;
+        this.keyMap = new Map();
+
+        arr.forEach(key => {
+            if (!this.keyMap.get(key)) {
+                this.keyMap.set(key, true);
+            } else {
+                throw new Error(`Duplicate key: ${key}`);
+            }
+        })
+
+
         this.buildHeap(arr);
+
     }
 
     /**
@@ -173,6 +185,13 @@ class Heap {
             throw new Error("Invalid key!");
         }
 
+        // check if key already exists
+        if (!this.keyMap.get(value)) {
+            this.keyMap.set(value, true);
+        } else {
+            throw new Error(`Duplicate key: ${value}`);
+        }
+
         // push the value to the bottom of the heap
         this.arr.push(value);
 
@@ -182,9 +201,14 @@ class Heap {
         return this;
     }
 
+    /**
+     * Returns the size (# of elements) of the Heap
+     */
     size() {
         return this.arr.length;
     }
+
+
 
 }
 

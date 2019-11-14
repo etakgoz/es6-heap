@@ -86,3 +86,15 @@ heap.extract();
 
 heap.peek();                // { age: 35, val: "Tolga" }
 ```
+
+## tests
+
+
+```
+const { Heap, MAX_COMPARATOR, MIN_COMPARATOR, MIN_STRING_COMPARATOR, MAX_STRING_COMPARATOR } = require('./heap');
+
+const arr = [8, 4, 7, 5, 1, 10, 6];
+const heap = new Heap(arr, MAX_COMPARATOR, a => !isNaN(a));  // input must be a number
+
+heap.insert("invalid");     // throws error
+```

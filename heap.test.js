@@ -140,6 +140,29 @@ describe('Heap Creation', () => {
     expect(heap.peek().val).toBe("Tolga");  
   });
 
+  test('Min Heap Duplicate Test 1', () => {
+    const arr = [0, 1, 2, 2];
+
+    try {
+      const heap = new Heap(arr);
+    } catch (error) {
+      expect(error.message).toBe("Duplicate key: 2");
+    }
+
+  });
+
+  test('Min Heap Duplicate Test 2', () => {
+    const arr = [0, 1, 2 ];
+
+    try {
+      const heap = new Heap(arr);
+      heap.insert(2);
+    } catch (error) {
+      expect(error.message).toBe("Duplicate key: 2");
+    }
+
+  });
+
 
 
 
