@@ -79,6 +79,28 @@ describe('Heap Creation', () => {
     expect(Heap.isHeap(heap.arr, MAX_STRING_COMPARATOR) && heap.peek() === "st. petersburg").toBe(true);
   });
 
+
+  test('Min Heap with Objects', () => {
+    const arr = [
+      { age: 35, val: "Tolga" },
+      { age: 50, val: "Brad" },
+      { age: 23, val: "James" },
+      { age: 44, val: "Jennifer" },
+      { age: 65, val: "Bill" }
+    ];
+
+    const heap = new Heap(arr, (a, b) => a.age - b.age, val => val.age && !isNaN(val.age));
+
+    expect(heap.peek().val).toBe("James");
+    heap.extract();
+    expect(heap.peek().val).toBe("Tolga");  
+  });
+
+
+
+});
+
+describe('Heap Extract & Insert', () => {
   test('Min Heap Extract & Insert Test 1', () => {
     const arr = [0, 1, 2, 3, 4, 5, -1, -7];
     const heap = new Heap(arr);
@@ -123,23 +145,9 @@ describe('Heap Creation', () => {
     heap.insert(-5);
     expect(heap.peek()).toBe(-5);
   });
+});
 
-  test('Min Heap with Objects', () => {
-    const arr = [
-      { age: 35, val: "Tolga" },
-      { age: 50, val: "Brad" },
-      { age: 23, val: "James" },
-      { age: 44, val: "Jennifer" },
-      { age: 65, val: "Bill" }
-    ];
-
-    const heap = new Heap(arr, (a, b) => a.age - b.age, val => val.age && !isNaN(val.age));
-
-    expect(heap.peek().val).toBe("James");
-    heap.extract();
-    expect(heap.peek().val).toBe("Tolga");  
-  });
-
+describe('Duplicate Test', () => {
   test('Min Heap Duplicate Test 1', () => {
     const arr = [0, 1, 2, 2];
 
@@ -162,8 +170,53 @@ describe('Heap Creation', () => {
     }
 
   });
-
-
-
-
 });
+
+describe('Key Map Test', () => {
+
+  test('Min Heap Creation', () => {
+    const arr = [10, 5, 11, 3, 12, 4];
+    const heap = new Heap(arr);
+    
+    for (let [key, index] of heap.keyMap) {
+      expect(heap.arr[index]).toBe(key);
+    }
+  });
+
+  test('Min Heap Insert & Extract', () => {
+    const arr = [10, 5, 11, 3, 12, 4];
+    const heap = new Heap(arr);
+
+    heap.insert(0);
+    heap.insert(7);
+
+    heap.extract();
+
+    heap.insert(30);
+    
+    for (let [key, index] of heap.keyMap) {
+      expect(heap.arr[index]).toBe(key);
+    }
+  });
+});
+
+describe('Heap Update', () => {
+  test('Min Heap Update', () => {
+    const arr = [10, 5, 11, 3, 12, 4];
+    const heap = new Heap(arr);
+    
+    heap.insert(0);
+    heap.insert(7);
+
+    heap.updateKey(7, -1);
+
+    expect(Heap.isHeap(heap.arr, 0, heap.comparator, heap.keyValidator)).toBe(true);
+
+    heap.updateKey(10, 2);
+    expect(Heap.isHeap(heap.arr, 0, heap.comparator, heap.keyValidator)).toBe(true);
+
+    heap.updateKey(-1, 20);
+    expect(Heap.isHeap(heap.arr, 0, heap.comparator, heap.keyValidator)).toBe(true);
+  });
+});
+

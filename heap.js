@@ -12,8 +12,6 @@ const swap = (arr, i, j) => {
     const temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
-
-    return j;
 };
 
 // min comparator to build min heap for numbers
@@ -43,13 +41,13 @@ class Heap {
         this.keyValidator = keyValidator;
         this.keyMap = new Map();
 
-        arr.forEach(key => {
-            if (!this.keyMap.get(key)) {
-                this.keyMap.set(key, true);
+        arr.forEach((key, index) => {
+            if (this.keyMap.get(key) === undefined) {
+                this.keyMap.set(key, index);
             } else {
                 throw new Error(`Duplicate key: ${key}`);
             }
-        })
+        });
 
 
         this.buildHeap(arr);
@@ -65,7 +63,7 @@ class Heap {
         // Check each array value is a valid key
         arr.forEach(value => {
             if (!this.keyValidator(value)) {
-                throw new Error(`Invalid key! ${value}`);
+                throw new Error(`Invalid key: ${value}`);
             }
         });
 
@@ -93,7 +91,7 @@ class Heap {
         // Check each array value is a valid key
         arr.forEach(value => {
             if (!keyValidator(value)) {
-                throw new Error(`Invalid key! ${value}`);
+                throw new Error(`Invalid key: ${value}`);
             }
         });
 
@@ -127,11 +125,20 @@ class Heap {
             this.comparator(this.arr[leftChildIndex], currentValue) < 0 && 
             (rightChildIndex > length - 1 || this.comparator(this.arr[leftChildIndex], this.arr[rightChildIndex]) < 0)) {
                 
-            i = swap(this.arr, i, leftChildIndex);
-            this.bubbleDown(i);
+            swap(this.arr, i, leftChildIndex);
+            this.keyMap.set(this.arr[i], i);
+            this.keyMap.set(this.arr[leftChildIndex], leftChildIndex);
+
+
+            this.bubbleDown(leftChildIndex);
+
+
         } else if (rightChildIndex < length && this.comparator(this.arr[rightChildIndex], currentValue) < 0) {
-            i = swap(this.arr, i, rightChildIndex);
-            this.bubbleDown(i);
+            swap(this.arr, i, rightChildIndex);
+            this.keyMap.set(this.arr[i], i);
+            this.keyMap.set(this.arr[rightChildIndex], rightChildIndex);
+
+            this.bubbleDown(rightChildIndex);
         }
     }
 
@@ -146,8 +153,11 @@ class Heap {
     
             // compare current index with its parent and swap and keep bubbling up
             if (this.comparator(currentValue, this.arr[parentIndex]) < 0) {
-                i = swap(this.arr, i, parentIndex);
-                this.bubbleUp(i);
+                swap(this.arr, i, parentIndex);
+                this.keyMap.set(this.arr[i], i);
+                this.keyMap.set(this.arr[parentIndex], parentIndex);
+
+                this.bubbleUp(parentIndex);
             }
         }
     }
@@ -165,8 +175,11 @@ class Heap {
     extract() {
         // swap first element with the bottom of the heap
         swap(this.arr, 0, this.arr.length - 1);
+        this.keyMap.set(this.arr[0], 0);
+
 
         // pop last (previous first) element
+        this.keyMap.delete(this.arr[this.arr.length - 1]);
         const extracted = this.arr.pop();
 
         // bubble down root
@@ -182,12 +195,12 @@ class Heap {
     insert(value) {
         // check if key is valid
         if (!this.keyValidator(value)) {
-            throw new Error("Invalid key!");
+            throw new Error(`Invalid key: ${value}`);
         }
 
         // check if key already exists
         if (!this.keyMap.get(value)) {
-            this.keyMap.set(value, true);
+            this.keyMap.set(value, this.arr.length);
         } else {
             throw new Error(`Duplicate key: ${value}`);
         }
@@ -208,7 +221,33 @@ class Heap {
         return this.arr.length;
     }
 
+    /**
+     * Updates a key value
+     * @param {mixed} oldValue Old key value
+     * @param {mixed} newValue New key value
+     */
+    updateKey(oldValue, newValue) {
+        let index = this.keyMap.get(oldValue);
+        if (index === "undefined") {
+            throw new Error("Key does not exist");
+        }
 
+        if (this.keyMap.get(newValue)) {
+            throw new Error("New key already exists in the heap");
+        }
+
+        this.arr[index] = newValue;
+        this.keyMap.delete(oldValue);
+        this.keyMap.set(newValue, index);
+
+        if (this.comparator(this.arr[index], this.arr[getParentIndex(index)]) < 0) {
+            this.bubbleUp(index);
+        } else {
+            this.bubbleDown(index);
+        }
+
+        return this;
+    }
 
 }
 
