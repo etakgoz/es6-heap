@@ -1,6 +1,6 @@
 # ES6 Heap
 
-A binary heap implementation using ES6 JavaScript.
+A binary heap implementation using ES6 JavaScript. Uses a key map (additional O(n) storage) to check for duplicate keys in constant time and for fast updates.
 
 # usage
 

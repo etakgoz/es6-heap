@@ -40,6 +40,7 @@ class Heap {
         this.comparator = comparator;
         this.keyValidator = keyValidator;
         this.keyMap = new Map();
+        this.arr = [...arr];
 
         arr.forEach((key, index) => {
             if (this.keyMap.get(key) === undefined) {
@@ -50,7 +51,7 @@ class Heap {
         });
 
 
-        this.buildHeap(arr);
+        this.buildHeap(this.arr);
 
     }
 
@@ -228,7 +229,7 @@ class Heap {
      */
     updateKey(oldValue, newValue) {
         let index = this.keyMap.get(oldValue);
-        if (index === "undefined") {
+        if (index === undefined) {
             throw new Error("Key does not exist");
         }
 
@@ -240,13 +241,23 @@ class Heap {
         this.keyMap.delete(oldValue);
         this.keyMap.set(newValue, index);
 
-        if (this.comparator(this.arr[index], this.arr[getParentIndex(index)]) < 0) {
+        const parentIndex = getParentIndex(index);
+
+        if (parentIndex > -1 && this.comparator(this.arr[index], this.arr[parentIndex]) < 0) {
             this.bubbleUp(index);
         } else {
             this.bubbleDown(index);
         }
 
         return this;
+    }
+
+    /**
+     * Checks whether a given key value exists in the map and returns true/false accordingly
+     * @param {mixed} keyValue
+     */
+    contains(keyValue) {
+        return this.keyMap.get(keyValue) !== undefined;
     }
 
 }
